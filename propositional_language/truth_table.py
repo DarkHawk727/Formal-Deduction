@@ -1,56 +1,81 @@
 from enum import Enum, auto
 from itertools import product
-from typing import Any, List
+from typing import List, Tuple
 
-from atom import Atom
-from bidirectional import Bidirectional
-from conjunction import Conjunction
-from disjunction import Disjunction
+from tabulate import tabulate
+from text_styles import TextStyle
+
 from formula import Formula
-from implication import Implication
+from atom import Atom
 from negation import Negation
+from disjunction import Disjunction
+from conjunction import Conjunction
 
 
-# Assuming the Atom, Negation, Conjunction, Disjunction, Implication, and Bidirectional classes are already defined
-A = Atom("A")
-B = Atom("B")
-C = Atom("C")
-D = Atom("D")
-
-final_proposition = Bidirectional(
-    left=D,
-    right=Implication(
-        left=D,
-        right=Disjunction(left=C, right=Conjunction(left=B, right=Negation(right=A))),
-    ),
-)
+class SemanticStatus(Enum):
+    SATISFIABLE = auto()
+    TAUTOLOGY = auto()
+    CONTRADICTION = auto()
 
 
 class TruthTable:
-    class Satisfiability(Enum):
-        SATISFIABLE = auto()
-        TAUTOLOGY = auto()
-        CONTRADICTION = auto()
-
     def __init__(self, prop: Formula, domain: List[bool] = [True, False]) -> None:
-        atoms: List[str] = list(prop.variables()) + ["RESULT"]
-        self.table: List[List[bool | str]] = [atoms]
+        self._atoms: List[str] = list(prop.variables())
+        self._header: List[str] = self._atoms + [
+            TextStyle.BOLD + "RESULT" + TextStyle.ENDC
+        ]
+        self._table: List[List[bool]] = []
+        self._prop_str: str = str(prop)
 
-        for truth_val in product(domain, repeat=len(atoms)):
+        for truth_val in product(domain, repeat=len(self._atoms)):
             tv: List[bool] = list(truth_val)
-            self.table.append(tv + [str(prop.evaluate(dict(zip(atoms, tv))))])
+            result = prop.evaluate(dict(zip(list(self._atoms), tv)))
+            self._table.append(tv + [result])
 
-    def __str__(self) -> str:
-        result = ""
-        for row in self.table:
+    def __repr__(self) -> str:
+        printable: List[List[str]] = []
+        for row in self._table:
+            new_row: List[str] = []
             for elem in row:
-                result += str(elem) + " "
-            result += "\n"
-        return result
+                if elem:
+                    new_row.append(TextStyle.GREEN + str(elem) + TextStyle.ENDC)
+                else:
+                    new_row.append(TextStyle.RED + str(elem) + TextStyle.ENDC)
+            printable.append(new_row)
 
-    def satisfiability(self) -> str:
-        raise NotImplementedError
+        print(f"Proposition: {self._prop_str}")
+        print(
+            tabulate(
+                tabular_data=printable, headers=self._header, tablefmt="fancy_grid"
+            )
+        )
+        return ""
 
+    def __getitem__(self, i: int) -> Tuple[bool, ...]:
+        return tuple(self._table[i])
 
-t = TruthTable(prop=final_proposition)
-print(t)
+    def satisfiability(self) -> SemanticStatus:
+        results = [row[-1] for row in self._table]
+
+        if all(results):
+            return SemanticStatus.TAUTOLOGY
+        elif any(results):
+            return SemanticStatus.SATISFIABLE
+        else:
+            return SemanticStatus.CONTRADICTION
+
+    def disjunctive_normal_form(self) -> Formula:
+        for row in self._table:
+            if row[-1]:
+                for index, variable in enumerate(self._atoms):
+                    if row[index]:
+                        temp: Atom = Atom(name=variable)
+                        # Append the conjunction
+                        pass
+                    else:
+                        temp: Formula = Negation(right=Atom(name=variable))
+                        # Append the negation
+                        pass
+                pass
+            # Append that temp with a disjunction
+        return None
