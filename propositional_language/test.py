@@ -22,6 +22,14 @@ final_proposition = Bidirectional(
     ),
 )
 
-t = TruthTable(prop=final_proposition)
-print(t)
-print(t.satisfiability())
+# t = TruthTable(prop=final_proposition)
+# print(t)
+# print(t.satisfiability())
+
+
+X = Conjunction()
+print(X)
+X.left = A
+print(X)
+X.right = B
+print(X)

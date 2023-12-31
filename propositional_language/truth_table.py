@@ -62,7 +62,7 @@ class TruthTable:
         elif any(results):
             return SemanticStatus.SATISFIABLE
         else:
-            return SemanticStatus.CONTRADICTION
+            return SemanticStatus.CONTRADICTION  
 
     def disjunctive_normal_form(self) -> Formula:
         for row in self._table:
@@ -77,5 +77,5 @@ class TruthTable:
                         # Append the negation
                         pass
                 pass
-            # Append that temp with a disjunction
+            # Append tha   temp with a disjunction
         return None

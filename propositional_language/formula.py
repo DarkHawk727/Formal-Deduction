@@ -1,12 +1,14 @@
 from __future__ import annotations
-from typing import Any, Dict, Set
+from typing import Any, Dict, Optional, Set
 from abc import ABC, abstractmethod
 
 
 class Formula(ABC):
     _symbol: str = "X"
 
-    def __init__(self, left: Formula, right: Formula) -> None:
+    def __init__(
+        self, left: Optional[Formula] = None, right: Optional[Formula] = None
+    ) -> None:
         self.left = left
         self.right = right
 
@@ -32,4 +34,6 @@ class Formula(ABC):
         pass
 
     def variables(self) -> Set[str]:
-        return self.left.variables() | self.right.variables()
+        if self.left and self.right:
+            return self.left.variables() | self.right.variables()
+        raise NotImplementedError
