@@ -1,3 +1,4 @@
+from __future__ import annotations
 from enum import Enum, auto
 from itertools import product
 from typing import List, Tuple
@@ -54,6 +55,18 @@ class TruthTable:
     def __getitem__(self, i: int) -> Tuple[bool, ...]:
         return tuple(self._table[i])
 
+    # This seems too naive an approach since the headers can be in a different order.
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, TruthTable):
+            if len(self._table) != len(other._table):
+                return False
+            else:
+                for i in range(len(self._table)):
+                    if self._table[i] != other._table[i]:
+                        return False
+                return True
+        raise NotImplementedError
+
     def satisfiability(self) -> SemanticStatus:
         results = [row[-1] for row in self._table]
 
@@ -62,20 +75,6 @@ class TruthTable:
         elif any(results):
             return SemanticStatus.SATISFIABLE
         else:
-            return SemanticStatus.CONTRADICTION  
+            return SemanticStatus.CONTRADICTION
 
-    def disjunctive_normal_form(self) -> Formula:
-        for row in self._table:
-            if row[-1]:
-                for index, variable in enumerate(self._atoms):
-                    if row[index]:
-                        temp: Atom = Atom(name=variable)
-                        # Append the conjunction
-                        pass
-                    else:
-                        temp: Formula = Negation(right=Atom(name=variable))
-                        # Append the negation
-                        pass
-                pass
-            # Append tha   temp with a disjunction
-        return None
+

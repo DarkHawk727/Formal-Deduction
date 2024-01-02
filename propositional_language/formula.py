@@ -13,7 +13,17 @@ class Formula(ABC):
         self.right = right
 
     def __str__(self) -> str:
-        return f"({str(self.left)} {self._symbol} {str(self.right)})"
+        left_str, right_str = str(self.left), str(self.right)
+
+        if isinstance(self.left, Formula) and self.left._symbol == self._symbol:
+            left_str = left_str[1:-1]
+
+        if isinstance(self.right, Formula) and self.right._symbol == self._symbol:
+            right_str = right_str[1:-1]
+
+        return f"({left_str} {self._symbol} {right_str})"
+
+
 
     def __repr__(self) -> str:
         return self.__str__()
