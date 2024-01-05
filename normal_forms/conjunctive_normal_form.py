@@ -31,7 +31,7 @@ def build_clause(inp: List[Tuple[str, bool]]) -> Clause:
 def extract_clauses(t: TruthTable) -> List[Clause]:
     clauses: List[Clause] = []
     for row in t:
-        if row["RESULT"]:
+        if not row["RESULT"]:
             clauses.append(
                 build_clause(
                     inp=[(name, val) for name, val in row.items() if name != "RESULT"]

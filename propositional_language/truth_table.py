@@ -21,7 +21,7 @@ class SemanticStatus(Enum):
 
 class TruthTable:
     def __init__(self, prop: Formula, domain: List[bool] = [True, False]) -> None:
-        self._atoms: List[str] = list(prop.variables())
+        self._atoms: List[str] = sorted(list(prop.variables()))
         self._header: List[str] = self._atoms + ["RESULT"]
         self._table: List[List[bool]] = []
         self._prop_str: str = str(prop)
