@@ -1,7 +1,7 @@
 from __future__ import annotations
 from enum import Enum, auto
 from itertools import product
-from typing import List, Tuple
+from typing import Dict, Iterator, List, Tuple
 
 from tabulate import tabulate
 from text_styles import TextStyle
@@ -22,9 +22,7 @@ class SemanticStatus(Enum):
 class TruthTable:
     def __init__(self, prop: Formula, domain: List[bool] = [True, False]) -> None:
         self._atoms: List[str] = list(prop.variables())
-        self._header: List[str] = self._atoms + [
-            TextStyle.BOLD + "RESULT" + TextStyle.ENDC
-        ]
+        self._header: List[str] = self._atoms + ["RESULT"]
         self._table: List[List[bool]] = []
         self._prop_str: str = str(prop)
 
@@ -45,15 +43,21 @@ class TruthTable:
             printable.append(new_row)
 
         print(f"Proposition: {self._prop_str}")
+        printable_headers: List[str] = self._header
+        printable_headers[-1] = TextStyle.BOLD + "RESULT" + TextStyle.ENDC
         print(
             tabulate(
-                tabular_data=printable, headers=self._header, tablefmt="fancy_grid"
+                tabular_data=printable, headers=printable_headers, tablefmt="fancy_grid"
             )
         )
         return ""
 
-    def __getitem__(self, i: int) -> Tuple[bool, ...]:
-        return tuple(self._table[i])
+    def __getitem__(self, i: int) -> List[bool]:
+        return self._table[i]
+
+    def __iter__(self) -> Iterator[Dict[str, bool]]:
+        for row in self._table:
+            yield dict(zip(self._header, row))
 
     # This seems too naive an approach since the headers can be in a different order.
     def __eq__(self, other: object) -> bool:
@@ -76,5 +80,3 @@ class TruthTable:
             return SemanticStatus.SATISFIABLE
         else:
             return SemanticStatus.CONTRADICTION
-
-

@@ -23,8 +23,6 @@ class Formula(ABC):
 
         return f"({left_str} {self._symbol} {right_str})"
 
-
-
     def __repr__(self) -> str:
         return self.__str__()
 
