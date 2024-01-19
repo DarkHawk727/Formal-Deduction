@@ -20,4 +20,5 @@ This is a Python program to allow me to perform some operations with proposition
 
 - Recursive Descent Parser for Parsing propositions https://stackoverflow.com/questions/9785553/how-does-a-simple-calculator-with-parentheses-work
 - LogicThruPython
-- 
+- https://github.com/joedougherty/sentential
+- https://www.engr.mun.ca/~theo/Misc/exp_parsing.htm

@@ -14,6 +14,10 @@ def count_lines_chars_in_directory(directory_path):
     file_details = []
     total_lines = total_chars = 0
     for root, _, files in os.walk(directory_path):
+        # Skip directories that contain 'venv'
+        if "venv" in root.split(os.sep):
+            continue
+
         for file in files:
             if file.endswith(".py") and file != "sz.py":
                 file_path = os.path.join(root, file)
@@ -29,7 +33,6 @@ directory = (
     "C:/Users/Arjun Sarao/Formal-Deduction"  # Replace with your project directory path
 )
 file_details, total_lines, total_chars = count_lines_chars_in_directory(directory)
-
 
 file_details.append(
     (
