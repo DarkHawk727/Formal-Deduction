@@ -32,6 +32,7 @@ class TruthTable:
             self._table.append(tv + [result])
 
     def __repr__(self) -> str:
+        # TODO Show intermediate variables.
         printable: List[List[str]] = []
         for row in self._table:
             new_row: List[str] = []
