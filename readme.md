@@ -13,7 +13,7 @@ This is a Python program to allow me to perform some operations with proposition
 
 - Parse expressions from a plaintext representation using a recursive descent parser.
 - Show intermediate results in truth tables.
-- Define rules to transform expressions like (A → B) ≡ ((¬A) ∨ B)
+- Define rules to transform expressions like $((A\to B)\equiv ((\neg A)\vee B)$
 - Resolution using DPP
 
 ## Useful Links
